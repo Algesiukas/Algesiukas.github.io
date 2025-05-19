@@ -7,10 +7,57 @@ body, html {
   color: white;
 }
 
+/* Top Bar */
+.top-bar {
+  background-color: #111;
+  color: #ccc;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+/* Navigation Bar */
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #000;
+  color: white;
+  z-index: 10;
+  position: relative;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.logo {
+  text-align: center;
+  line-height: 0.9;
+  font-weight: bold;
+}
+
+.logo .no,
+.logo .half,
+.logo .sends {
+  display: block;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.nav-icons .icon {
+  font-size: 22px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+/* Hero Section */
 .hero {
   position: relative;
-  height: 100vh;
-  background-image: url('your-black-themed-image.jpg'); /* Replace with your image */
+  height: calc(100vh - 80px);
+  background-image: url('your-black-themed-image.jpg'); /* Replace this */
   background-size: cover;
   background-position: center;
 }
