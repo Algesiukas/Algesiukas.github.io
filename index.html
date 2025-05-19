@@ -3,39 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NO HALF SENDS</title>
-  <link rel="stylesheet" href="styles.css"/>
+  <title>Top Bar</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #f0f0f0;
+    }
+
+    .top-bar {
+      background-color: #000;
+      color: white;
+      font-size: 12px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .top-bar-left, .top-bar-right {
+      display: flex;
+      gap: 20px;
+    }
+
+    .top-bar-center {
+      text-align: center;
+      flex-grow: 1;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    .top-bar a {
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .top-bar a:hover {
+      text-decoration: underline;
+    }
+
+    .country-select {
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .country-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Top Info Bar -->
   <div class="top-bar">
-    KOSTENLOSER VERSAND AB 100€ (DEUTSCHLAND, ÖSTERREICH, SCHWEIZ)
+    <div class="top-bar-left">
+      <a href="#">SHOP</a>
+      <a href="#">NEW</a>
+      <a href="#">MEDIA</a>
+    </div>
+
+    <div class="top-bar-center">
+      KOSTENLOSER VERSAND AB 100€ (DEUTSCHLAND, ÖSTERREICH, SCHWEIZ)
+    </div>
+
+    <div class="top-bar-right">
+      <div class="country-wrapper">
+        🇦🇹
+        <select class="country-select">
+          <option value="at">Österreich (EUR €)</option>
+          <option value="de">Deutschland (EUR €)</option>
+          <option value="ch">Schweiz (CHF)</option>
+        </select>
+      </div>
+      <a href="#">EN</a>
+      <a href="#">ACCOUNT</a>
+      <a href="#">BAG</a>
+    </div>
   </div>
 
-  <!-- Navigation Bar -->
-  <div class="navbar">
-    <div class="nav-left">☰</div>
-    <div class="nav-center">
-      <div class="logo-line">NO</div>
-      <div class="logo-line">HALF</div>
-      <div class="logo-line">SENDS</div>
-    </div>
-    <div class="nav-right">
-      <span class="icon">👤</span>
-      <span class="icon">🛒</span>
-    </div>
-  </div>
-
-  <!-- Hero Section -->
-  <div class="hero">
-    <div class="overlay"></div>
-    <div class="hero-content">
-      <h1>DRIFT<br>ASSOCIATION</h1>
-      <button onclick="shopNow()">SHOP NOW</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
