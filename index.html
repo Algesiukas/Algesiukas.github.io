@@ -1,154 +1,21 @@
-<!DOCTYPE html>
-<html lang="lt">
-<head>
-  <meta charset="UTF-8">
-  <title>Mini žaidimas tau ❤️</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #ffe6eb;
-      background-image: url('https://i.ibb.co/jwh3F7f/heart.png');
-      background-repeat: repeat;
-      background-size: 60px;
-      margin: 0;
-      padding: 0;
-    }
-    .game-box {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 500px;
-      margin: 80px auto;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    }
-    img {
-      max-width: 200px;
-      border-radius: 15px;
-      margin-bottom: 15px;
-    }
-    .question {
-      font-size: 20px;
-      margin-bottom: 20px;
-      color: #d6336c;
-    }
-    button {
-      background: #ff4d6d;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      margin: 5px;
-    }
-    button:hover {
-      background: #e6004c;
-    }
-    .hidden {
-      display: none;
-    }
-    .results {
-      text-align: left;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div class="game-box">
-    <img id="photo" src="https://i.ibb.co/2gJxCwY/love.jpg" alt="Love">
-    <div class="question" id="question">Sveika, tu pasiruošusi žaisti? ❤️</div>
-    <div id="answers"></div>
-    <button id="nextBtn" class="hidden">Kitas klausimas ➡️</button>
-    <div id="results" class="results hidden"></div>
-  </div>
+<form id="gameForm" action="https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse" method="POST" target="hidden_iframe">
+  <input type="hidden" name="entry.1234567890" id="q1">
+  <input type="hidden" name="entry.0987654321" id="q2">
+  <input type="hidden" name="entry.1122334455" id="q3">
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+</form>
 
-  <script>
-    const questions = [
-      {
-        question: "Ar tu mane myli? ❤️",
-        answer: "Taip, labai! 🥰",
-        photo: "https://i.ibb.co/QJZK6D4/color.jpg"
-      },
-      {
-        question: "Ar nori žaisti su manimi daugiau klausimų? 💕",
-        answer: "Taip!",
-        photo: "https://i.ibb.co/nrJMybJ/couple.jpg"
-      },
-      {
-        question: "Ar esi laiminga dabar? 🥰",
-        answer: "Taip, labai!",
-        photo: "https://i.ibb.co/zNt8x44/heart.jpg"
-      }
-    ];
+<script>
+const questions = [
+  {question: "Kokia yra mano mėgstamiausia spalva?", answerId: "q1", answer: "Raudona"},
+  {question: "Kada mes susipažinome?", answerId: "q2", answer: "2023"},
+  {question: "Kas man esi tu?", answerId: "q3", answer: "Visa mano širdis ❤️"}
+];
 
-    let current = 0;
-    let answersGiven = [];
+questions.forEach(q => {
+  document.getElementById(q.answerId).value = q.answer;
+});
 
-    const questionEl = document.getElementById("question");
-    const answersEl = document.getElementById("answers");
-    const photoEl = document.getElementById("photo");
-    const nextBtn = document.getElementById("nextBtn");
-    const resultsEl = document.getElementById("results");
-
-    function loadQuestion() {
-      const q = questions[current];
-      questionEl.textContent = q.question;
-      photoEl.src = q.photo;
-      answersEl.innerHTML = "";
-
-      // Tik vienas mygtukas
-      const btn = document.createElement("button");
-      btn.textContent = q.answer;
-      btn.onclick = () => chooseAnswer(q.answer);
-      answersEl.appendChild(btn);
-    }
-
-    function chooseAnswer(answer) {
-      const q = questions[current];
-      const chosen = { question: q.question, answer };
-      answersGiven.push(chosen);
-
-      // Naujas fetch į tavo script
-      fetch("https://script.google.com/macros/s/AKfycbwCss9I9t9_rkZoQRLxA4Pie5vOTpgfasZY2vELnYsMe_aTIctsIx8dPPKxm6CzwTqyTQ/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: q.question,
-          answer: answer
-        })
-      })
-      .then(res => res.text())
-      .then(txt => console.log("Server response:", txt))
-      .catch(err => console.error("Error:", err));
-
-      nextBtn.classList.remove("hidden");
-    }
-
-    nextBtn.onclick = () => {
-      current++;
-      if (current < questions.length) {
-        loadQuestion();
-        nextBtn.classList.add("hidden");
-      } else {
-        showResults();
-      }
-    };
-
-    function showResults() {
-      questionEl.textContent = "Žaidimas baigtas 💖 Ačiū, kad atsakei!";
-      answersEl.innerHTML = "";
-      photoEl.src = "https://i.ibb.co/6stLZgY/end.jpg";
-      nextBtn.style.display = "none";
-
-      resultsEl.classList.remove("hidden");
-      resultsEl.innerHTML = answersGiven.map((a, i) => `
-        <p><b>${i+1}. ${a.question}</b><br>
-        Tavo atsakymas: ${a.answer}</p>
-      `).join("");
-    }
-
-    loadQuestion();
-  </script>
-</body>
-</html>
+// Siųsti formą automatiškai
+document.getElementById("gameForm").submit();
+</script>
