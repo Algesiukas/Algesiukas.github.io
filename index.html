@@ -64,23 +64,20 @@
   </div>
 
   <script>
-    // Tavo Google Apps Script URL:
-    const SHEET_URL = "https://script.google.com/macros/s/AKfycbwJTL42LPOHc_m9n8sM5G7LYwppN30-1d-2AadJocpAVevJoqp5XuU4JJnay0HjO2qfWg/exec";
-
     const questions = [
       {
-        question: "Kokia yra mano mėgstamiausia spalva?",
-        answers: ["Raudona", "Juoda", "Mėlyna"],
+        question: "Ar tu mane myli? ❤️",
+        answer: "Taip, labai! 🥰",
         photo: "https://i.ibb.co/QJZK6D4/color.jpg"
       },
       {
-        question: "Kada mes susipažinome? 💕",
-        answers: ["2022", "2023", "2024"],
+        question: "Ar nori žaisti su manimi daugiau klausimų? 💕",
+        answer: "Taip!",
         photo: "https://i.ibb.co/nrJMybJ/couple.jpg"
       },
       {
-        question: "Kas man esi tu? 🥰",
-        answers: ["Tik draugė", "Visa mano širdis ❤️", "Nežinau"],
+        question: "Ar esi laiminga dabar? 🥰",
+        answer: "Taip, labai!",
         photo: "https://i.ibb.co/zNt8x44/heart.jpg"
       }
     ];
@@ -99,26 +96,31 @@
       questionEl.textContent = q.question;
       photoEl.src = q.photo;
       answersEl.innerHTML = "";
-      q.answers.forEach(answer => {
-        const btn = document.createElement("button");
-        btn.textContent = answer;
-        btn.onclick = () => chooseAnswer(answer);
-        answersEl.appendChild(btn);
-      });
+
+      // Tik vienas mygtukas
+      const btn = document.createElement("button");
+      btn.textContent = q.answer;
+      btn.onclick = () => chooseAnswer(q.answer);
+      answersEl.appendChild(btn);
     }
 
     function chooseAnswer(answer) {
       const q = questions[current];
       const chosen = { question: q.question, answer };
-
       answersGiven.push(chosen);
 
-      // Siunčia į Google Sheets
-      fetch(SHEET_URL, {
+      // Naujas fetch į tavo script
+      fetch("https://script.google.com/macros/s/AKfycbwCss9I9t9_rkZoQRLxA4Pie5vOTpgfasZY2vELnYsMe_aTIctsIx8dPPKxm6CzwTqyTQ/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(chosen)
-      }).catch(console.error);
+        body: JSON.stringify({
+          question: q.question,
+          answer: answer
+        })
+      })
+      .then(res => res.text())
+      .then(txt => console.log("Server response:", txt))
+      .catch(err => console.error("Error:", err));
 
       nextBtn.classList.remove("hidden");
     }
