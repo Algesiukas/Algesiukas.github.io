@@ -1,235 +1,161 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="lt">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Instrumentų ekranas — mockup</title>
-<style>
-  :root{
-    --bg:#000;
-    --fg:#E6E6E6;
-    --muted:#9a9a9a;
-    --panel-padding:10px;
-    --icon-size:36px;
-    --row-gap:8px;
-    --font-family: "Courier New", Courier, monospace;
-  }
+  <meta charset="UTF-8">
+  <title>Tesla UI Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html,body{
-    height:100%;
-    margin:0;
-    background:linear-gradient(180deg,#050505 0%, #0b0b0b 100%);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:var(--font-family);
-  }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* ekranėlio rėmas */
-  .oled-wrap{
-    width:420px;
-    max-width:92vw;
-    background:linear-gradient(180deg,#101010 0%, #060606 100%);
-    border-radius:10px;
-    padding:14px;
-    box-shadow:0 8px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.02);
-    border:3px solid #171717;
-  }
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: #111;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
 
-  /* faktinis „OLED“ ekranas (tamsus) */
-  .oled-screen{
-    background: #030303;
-    color:var(--fg);
-    border-radius:6px;
-    padding:var(--panel-padding);
-    box-shadow: inset 0 0 18px rgba(255,255,255,0.02);
-  }
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1rem;
+      padding: 1rem 2rem;
+    }
 
-  /* imituojame OLED pixelius — tekstas "pixelated" */
-  .panel{
-    width:100%;
-    height:240px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    gap:var(--row-gap);
-    font-smooth:never;
-    -webkit-font-smoothing: none;
-    image-rendering: pixelated;
-  }
+    .card {
+      background: #111;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
 
-  .row{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:6px 6px;
-  }
+    .speed {
+      font-size: 5rem;
+      font-weight: bold;
+      color: #0ff;
+    }
 
-  .icon{
-    width:64px;
-    min-width:64px;
-    height:48px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
+    .drive-modes button {
+      background: #222;
+      border: none;
+      color: #eee;
+      padding: 0.5rem 1rem;
+      margin: 0.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .drive-modes button.active {
+      background: #0ff;
+      color: #000;
+    }
 
-  /* SVG icon stilius */
-  .icon svg{
-    width:var(--icon-size);
-    height:var(--icon-size);
-    shape-rendering:crispEdges;
-    image-rendering:pixelated;
-    fill:none;
-    stroke:var(--fg);
-    stroke-width:2;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-  }
+    .battery-bar {
+      background: #333;
+      border-radius: 6px;
+      height: 20px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+    .battery-fill {
+      background: linear-gradient(90deg, #0ff, #0aa);
+      height: 100%;
+      width: 72%; /* battery level */
+    }
 
-  .value{
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    flex:1;
-    font-weight:700;
-    /* didesnis, pikselinis stilius */
-    font-size:30px;
-    letter-spacing:1px;
-    text-shadow: 0 0 0 rgba(255,255,255,0.05);
-  }
+    .climate {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .climate button {
+      background: #222;
+      border: none;
+      color: #eee;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-  .value.small{
-    font-size:22px;
-    color:var(--muted);
-    font-weight:600;
-  }
-
-  /* antrinis formatas (pvz. 'B' iš dešinės) */
-  .value .unit{
-    margin-left:8px;
-    font-size:18px;
-    color:var(--muted);
-    font-weight:600;
-  }
-
-  /* stulpeliai center/left */
-  .row:nth-child(odd) .value{
-    color:var(--fg);
-  }
-
-  /* batt row mažesnis ikonos aukštis */
-  .row.batt .icon{ height:34px; }
-
-  /* responsive */
-  @media (max-width:420px){
-    .oled-wrap{ width:360px; }
-    .value{ font-size:24px; }
-    .icon{ min-width:54px; }
-  }
-
-  /* papildomas „CRT / pixel“ efektas */
-  .oled-screen::after{
-    content:"";
-    pointer-events:none;
-    position:absolute;
-    inset:0;
-    mix-blend-mode:soft-light;
-    opacity:0.035;
-    background:
-      repeating-linear-gradient(180deg, rgba(255,255,255,0.01) 0 1px, transparent 1px 3px);
-    border-radius:6px;
-  }
-
-  /* centrinis konteineris pozicionavimui */
-  .centered{
-    position:relative;
-  }
-</style>
+    footer {
+      display: flex;
+      justify-content: space-around;
+      background: #111;
+      padding: 1rem;
+    }
+    footer button {
+      background: #222;
+      border: none;
+      color: #eee;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    footer button:hover {
+      background: #0ff;
+      color: #000;
+    }
+  </style>
 </head>
 <body>
-  <div class="oled-wrap centered">
-    <div class="oled-screen">
-      <div class="panel">
-        <!-- ROW 1: oil -->
-        <div class="row">
-          <div class="icon" title="Oil">
-            <!-- oil can icon -->
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 10c0-1.1.9-2 2-2h1a2 2 0 0 0 2-2V4h3l1 2h3a1 1 0 0 1 1 1v3" />
-              <path d="M7 14v2a3 3 0 0 0 6 0v-2" />
-              <path d="M18 7v2" />
-            </svg>
-          </div>
-          <div class="value" id="oilValue">0.0<span class="unit">B</span></div>
-        </div>
+  <header>
+    <div>16:42 • LTE</div>
+    <div>Profilis: Vairuotojas</div>
+  </header>
 
-        <!-- ROW 2: wrench / mech temp -->
-        <div class="row">
-          <div class="icon" title="Mechaninė temperatūra">
-            <!-- wrench icon -->
-            <svg viewBox="0 0 24 24">
-              <path d="M21 3l-6 6" />
-              <path d="M14 4a3 3 0 0 0-4 4L4 14v6h6l6-6a3 3 0 0 0 4-4" />
-            </svg>
-          </div>
-          <div class="value" id="mechTemp">24<span class="unit">C</span></div>
-        </div>
+  <main>
+    <!-- Kairė pusė: greitis + akumuliatorius -->
+    <div class="card">
+      <div class="speed">72</div>
+      <div>km/h</div>
 
-        <!-- ROW 3: temp / ambient -->
-        <div class="row">
-          <div class="icon" title="Aplinkos temperatūra">
-            <!-- thermometer icon -->
-            <svg viewBox="0 0 24 24">
-              <path d="M14 14.76V5a2 2 0 1 0-4 0v9.76a4 4 0 1 0 4 0z" />
-            </svg>
-          </div>
-          <div class="value" id="ambTemp">0<span class="unit">C</span></div>
-        </div>
-
-        <!-- ROW 4: battery -->
-        <div class="row batt">
-          <div class="icon" title="Battery">
-            <!-- battery icon -->
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="6" width="18" height="12" rx="2" ry="2"/>
-              <rect x="20" y="9" width="2" height="6" rx="1" ry="1"/>
-              <rect x="4" y="8" width="12" height="8" fill="none" stroke="#fff" />
-            </svg>
-          </div>
-          <div class="value" id="battV">7.5<span class="unit">V</span></div>
-        </div>
+      <div class="drive-modes">
+        <button class="active">P</button>
+        <button>R</button>
+        <button>N</button>
+        <button>D</button>
       </div>
+
+      <h3 style="margin-top:1rem;">Akumuliatorius</h3>
+      <div class="battery-bar">
+        <div class="battery-fill"></div>
+      </div>
+      <div style="margin-top:0.5rem;">72% • 312 km</div>
     </div>
-  </div>
 
-<script>
-  // Paprastas demo: atnaujina reikšmes kas sekundę (pakeisk į savo duomenis)
-  (function(){
-    const oilEl = document.getElementById('oilValue');
-    const mechEl = document.getElementById('mechTemp');
-    const ambEl = document.getElementById('ambTemp');
-    const battEl = document.getElementById('battV');
+    <!-- Dešinė pusė: klimato kontrolė -->
+    <div class="card climate">
+      <button onclick="changeTemp(-1)">-</button>
+      <div id="tempDisplay" style="font-size:2rem; color:#0ff;">21°C</div>
+      <button onclick="changeTemp(1)">+</button>
+    </div>
+  </main>
 
-    let oil = 0.0;
-    let mech = 24;
-    let amb = 0;
-    let batt = 7.5;
-    let dir = 1;
+  <footer>
+    <button>Navigacija</button>
+    <button>Energija</button>
+    <button>Įkrovimas</button>
+    <button>Klimatas</button>
+    <button>Medija</button>
+  </footer>
 
-    setInterval(()=>{
-      // paprasti svyravimai demo tikslais
-      oil = Math.max(0, (Math.random()*0.4).toFixed(1));
-      mech = 22 + Math.floor(Math.random()*6);
-      amb = Math.floor(Math.random()*5);
-      batt = (7.3 + Math.random()*0.6).toFixed(1);
-
-      oilEl.innerHTML = oil + '<span class="unit">B</span>';
-      mechEl.innerHTML = mech + '<span class="unit">C</span>';
-      ambEl.innerHTML = amb + '<span class="unit">C</span>';
-      battEl.innerHTML = batt + '<span class="unit">V</span>';
-    }, 1000);
-  })();
-</script>
+  <script>
+    let temp = 21;
+    function changeTemp(delta) {
+      temp += delta;
+      document.getElementById("tempDisplay").textContent = temp + "°C";
+    }
+  </script>
 </body>
 </html>
