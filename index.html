@@ -2,47 +2,49 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8">
-  <title>Tesla UI Prototipas</title>
+  <title>Tesla UI Prototype</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: Arial, sans-serif;
       background-color: #000;
       color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 2fr 1fr;
-      grid-template-rows: auto 1fr auto;
-      gap: 1rem;
-      padding: 1rem;
-      height: 100vh;
-    }
-
-    header, footer {
-      grid-column: 1 / 4;
+    header {
       display: flex;
       justify-content: space-between;
-      padding: 0.5rem 1rem;
-      background-color: #111;
+      padding: 1rem 2rem;
+      background: #111;
       font-size: 0.9rem;
       color: #aaa;
     }
 
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1rem;
+      padding: 1rem 2rem;
+    }
+
     .card {
-      background-color: #111;
+      background: #111;
       border-radius: 12px;
-      padding: 1rem;
+      padding: 1.5rem;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
     .speed {
-      font-size: 4rem;
-      color: #0ff;
+      font-size: 5rem;
       font-weight: bold;
+      color: #0ff;
     }
 
     .drive-modes button {
@@ -54,7 +56,6 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     .drive-modes button.active {
       background: #0ff;
       color: #000;
@@ -67,26 +68,18 @@
       margin-top: 0.5rem;
       overflow: hidden;
     }
-
     .battery-fill {
       background: linear-gradient(90deg, #0ff, #0aa);
       height: 100%;
-      width: 90%;
+      width: 72%; /* battery level */
     }
 
-    .map {
-      height: 300px;
-      border-radius: 12px;
-      margin-bottom: 1rem;
+    .climate {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-
-    .media-player {
-      background: #111;
-      padding: 1rem;
-      border-radius: 12px;
-    }
-
-    .media-player button {
+    .climate button {
       background: #222;
       border: none;
       color: #eee;
@@ -95,12 +88,12 @@
       cursor: pointer;
     }
 
-    .route-info {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #ccc;
+    footer {
+      display: flex;
+      justify-content: space-around;
+      background: #111;
+      padding: 1rem;
     }
-
     footer button {
       background: #222;
       border: none;
@@ -109,7 +102,6 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     footer button:hover {
       background: #0ff;
       color: #000;
@@ -117,81 +109,52 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>17:36 • LTE</div>
-      <div>Profilis: Vaidas</div>
-    </header>
+  <header>
+    <div>16:42 • LTE</div>
+    <div>Profilis: Vairuotojas</div>
+  </header>
 
-    <!-- Kairė: Greitis + režimas + akumuliatorius -->
+  <main>
+    <!-- Kairė pusė: greitis + akumuliatorius -->
     <div class="card">
-      <div class="speed">63</div>
-      <div>MPH</div>
+      <div class="speed">72</div>
+      <div>km/h</div>
+
       <div class="drive-modes">
-        <button>P</button>
+        <button class="active">P</button>
         <button>R</button>
         <button>N</button>
-        <button class="active">D</button>
+        <button>D</button>
       </div>
-      <h4 style="margin-top:1rem;">Akumuliatorius</h4>
+
+      <h3 style="margin-top:1rem;">Akumuliatorius</h3>
       <div class="battery-bar">
         <div class="battery-fill"></div>
       </div>
-      <div style="margin-top:0.5rem;">90% • 320 km</div>
+      <div style="margin-top:0.5rem;">72% • 312 km</div>
     </div>
 
-    <!-- Centras: Navigacija -->
-    <div class="card">
-      <h3>Kelionė į tikslą</h3>
-      <div class="route-info">
-        <p>ETA: 10:58 AM</p>
-        <p>Atstumas: 15 mi</p>
-        <p>Trukmė: 37 min</p>
-        <p>Maršrutas: Highway 400 → Mansell Rd</p>
-        <p>Stotelė: Electrify Charger (500 ft)</p>
-      </div>
-      <button style="margin-top:1rem; background:#900; color:#fff; padding:0.5rem 1rem; border:none; border-radius:6px;">Atšaukti kelionę</button>
+    <!-- Dešinė pusė: klimato kontrolė -->
+    <div class="card climate">
+      <button onclick="changeTemp(-1)">-</button>
+      <div id="tempDisplay" style="font-size:2rem; color:#0ff;">21°C</div>
+      <button onclick="changeTemp(1)">+</button>
     </div>
+  </main>
 
-    <!-- Dešinė: Žemėlapis + medija -->
-    <div>
-      <div id="map" class="map"></div>
-      <div class="media-player">
-        <h4>🎵 Dabar groja:</h4>
-        <p id="track">Nežinoma</p>
-        <button onclick="findMusic()">🔍 Atrasti muziką</button>
-        <div style="margin-top:0.5rem;">
-          <button>⏮️</button>
-          <button>⏯️</button>
-          <button>⏭️</button>
-        </div>
-      </div>
-    </div>
+  <footer>
+    <button>Navigacija</button>
+    <button>Energija</button>
+    <button>Įkrovimas</button>
+    <button>Klimatas</button>
+    <button>Medija</button>
+  </footer>
 
-    <footer>
-      <button>Navigacija</button>
-      <button>Įkrovimas</button>
-      <button>Klimatas</button>
-      <button>Medija</button>
-      <button>Nustatymai</button>
-    </footer>
-  </div>
-
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    const map = L.map('map').setView([54.6872, 25.2797], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    L.marker([54.6872, 25.2797]).addTo(map).bindPopup("Tavo dabartinė vieta").openPopup();
-
-    function findMusic() {
-      const track = {
-        title: "Mia & Sebastian's Theme",
-        artist: "Justin Hurwitz",
-        album: "La La Land OST"
-      };
-      document.getElementById("track").innerHTML = `<strong>${track.title}</strong><br>${track.artist} – ${track.album}`;
+    let temp = 21;
+    function changeTemp(delta) {
+      temp += delta;
+      document.getElementById("tempDisplay").textContent = temp + "°C";
     }
   </script>
 </body>
