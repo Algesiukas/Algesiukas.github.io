@@ -1,21 +1,235 @@
-<form id="gameForm" action="https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse" method="POST" target="hidden_iframe">
-  <input type="hidden" name="entry.1234567890" id="q1">
-  <input type="hidden" name="entry.0987654321" id="q2">
-  <input type="hidden" name="entry.1122334455" id="q3">
-  <iframe name="hidden_iframe" style="display:none;"></iframe>
-</form>
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Instrumentų ekranas — mockup</title>
+<style>
+  :root{
+    --bg:#000;
+    --fg:#E6E6E6;
+    --muted:#9a9a9a;
+    --panel-padding:10px;
+    --icon-size:36px;
+    --row-gap:8px;
+    --font-family: "Courier New", Courier, monospace;
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    background:linear-gradient(180deg,#050505 0%, #0b0b0b 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-family);
+  }
+
+  /* ekranėlio rėmas */
+  .oled-wrap{
+    width:420px;
+    max-width:92vw;
+    background:linear-gradient(180deg,#101010 0%, #060606 100%);
+    border-radius:10px;
+    padding:14px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.02);
+    border:3px solid #171717;
+  }
+
+  /* faktinis „OLED“ ekranas (tamsus) */
+  .oled-screen{
+    background: #030303;
+    color:var(--fg);
+    border-radius:6px;
+    padding:var(--panel-padding);
+    box-shadow: inset 0 0 18px rgba(255,255,255,0.02);
+  }
+
+  /* imituojame OLED pixelius — tekstas "pixelated" */
+  .panel{
+    width:100%;
+    height:240px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:var(--row-gap);
+    font-smooth:never;
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+  }
+
+  .row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:6px 6px;
+  }
+
+  .icon{
+    width:64px;
+    min-width:64px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* SVG icon stilius */
+  .icon svg{
+    width:var(--icon-size);
+    height:var(--icon-size);
+    shape-rendering:crispEdges;
+    image-rendering:pixelated;
+    fill:none;
+    stroke:var(--fg);
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+
+  .value{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    flex:1;
+    font-weight:700;
+    /* didesnis, pikselinis stilius */
+    font-size:30px;
+    letter-spacing:1px;
+    text-shadow: 0 0 0 rgba(255,255,255,0.05);
+  }
+
+  .value.small{
+    font-size:22px;
+    color:var(--muted);
+    font-weight:600;
+  }
+
+  /* antrinis formatas (pvz. 'B' iš dešinės) */
+  .value .unit{
+    margin-left:8px;
+    font-size:18px;
+    color:var(--muted);
+    font-weight:600;
+  }
+
+  /* stulpeliai center/left */
+  .row:nth-child(odd) .value{
+    color:var(--fg);
+  }
+
+  /* batt row mažesnis ikonos aukštis */
+  .row.batt .icon{ height:34px; }
+
+  /* responsive */
+  @media (max-width:420px){
+    .oled-wrap{ width:360px; }
+    .value{ font-size:24px; }
+    .icon{ min-width:54px; }
+  }
+
+  /* papildomas „CRT / pixel“ efektas */
+  .oled-screen::after{
+    content:"";
+    pointer-events:none;
+    position:absolute;
+    inset:0;
+    mix-blend-mode:soft-light;
+    opacity:0.035;
+    background:
+      repeating-linear-gradient(180deg, rgba(255,255,255,0.01) 0 1px, transparent 1px 3px);
+    border-radius:6px;
+  }
+
+  /* centrinis konteineris pozicionavimui */
+  .centered{
+    position:relative;
+  }
+</style>
+</head>
+<body>
+  <div class="oled-wrap centered">
+    <div class="oled-screen">
+      <div class="panel">
+        <!-- ROW 1: oil -->
+        <div class="row">
+          <div class="icon" title="Oil">
+            <!-- oil can icon -->
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10c0-1.1.9-2 2-2h1a2 2 0 0 0 2-2V4h3l1 2h3a1 1 0 0 1 1 1v3" />
+              <path d="M7 14v2a3 3 0 0 0 6 0v-2" />
+              <path d="M18 7v2" />
+            </svg>
+          </div>
+          <div class="value" id="oilValue">0.0<span class="unit">B</span></div>
+        </div>
+
+        <!-- ROW 2: wrench / mech temp -->
+        <div class="row">
+          <div class="icon" title="Mechaninė temperatūra">
+            <!-- wrench icon -->
+            <svg viewBox="0 0 24 24">
+              <path d="M21 3l-6 6" />
+              <path d="M14 4a3 3 0 0 0-4 4L4 14v6h6l6-6a3 3 0 0 0 4-4" />
+            </svg>
+          </div>
+          <div class="value" id="mechTemp">24<span class="unit">C</span></div>
+        </div>
+
+        <!-- ROW 3: temp / ambient -->
+        <div class="row">
+          <div class="icon" title="Aplinkos temperatūra">
+            <!-- thermometer icon -->
+            <svg viewBox="0 0 24 24">
+              <path d="M14 14.76V5a2 2 0 1 0-4 0v9.76a4 4 0 1 0 4 0z" />
+            </svg>
+          </div>
+          <div class="value" id="ambTemp">0<span class="unit">C</span></div>
+        </div>
+
+        <!-- ROW 4: battery -->
+        <div class="row batt">
+          <div class="icon" title="Battery">
+            <!-- battery icon -->
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="6" width="18" height="12" rx="2" ry="2"/>
+              <rect x="20" y="9" width="2" height="6" rx="1" ry="1"/>
+              <rect x="4" y="8" width="12" height="8" fill="none" stroke="#fff" />
+            </svg>
+          </div>
+          <div class="value" id="battV">7.5<span class="unit">V</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
-const questions = [
-  {question: "Kokia yra mano mėgstamiausia spalva?", answerId: "q1", answer: "Raudona"},
-  {question: "Kada mes susipažinome?", answerId: "q2", answer: "2023"},
-  {question: "Kas man esi tu?", answerId: "q3", answer: "Visa mano širdis ❤️"}
-];
+  // Paprastas demo: atnaujina reikšmes kas sekundę (pakeisk į savo duomenis)
+  (function(){
+    const oilEl = document.getElementById('oilValue');
+    const mechEl = document.getElementById('mechTemp');
+    const ambEl = document.getElementById('ambTemp');
+    const battEl = document.getElementById('battV');
 
-questions.forEach(q => {
-  document.getElementById(q.answerId).value = q.answer;
-});
+    let oil = 0.0;
+    let mech = 24;
+    let amb = 0;
+    let batt = 7.5;
+    let dir = 1;
 
-// Siųsti formą automatiškai
-document.getElementById("gameForm").submit();
+    setInterval(()=>{
+      // paprasti svyravimai demo tikslais
+      oil = Math.max(0, (Math.random()*0.4).toFixed(1));
+      mech = 22 + Math.floor(Math.random()*6);
+      amb = Math.floor(Math.random()*5);
+      batt = (7.3 + Math.random()*0.6).toFixed(1);
+
+      oilEl.innerHTML = oil + '<span class="unit">B</span>';
+      mechEl.innerHTML = mech + '<span class="unit">C</span>';
+      ambEl.innerHTML = amb + '<span class="unit">C</span>';
+      battEl.innerHTML = batt + '<span class="unit">V</span>';
+    }, 1000);
+  })();
 </script>
+</body>
+</html>
