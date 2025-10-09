@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Tesla UI Prototipas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     body {
       margin: 0;
@@ -70,20 +71,16 @@
     .battery-fill {
       background: linear-gradient(90deg, #0ff, #0aa);
       height: 100%;
-      width: 90%; /* 90% battery */
+      width: 90%;
     }
 
     .map {
-      background: #222;
-      height: 100%;
+      height: 300px;
       border-radius: 12px;
-      position: relative;
-      color: #ccc;
-      padding: 1rem;
+      margin-bottom: 1rem;
     }
 
     .media-player {
-      margin-top: 1rem;
       background: #111;
       padding: 1rem;
       border-radius: 12px;
@@ -103,12 +100,26 @@
       font-size: 0.9rem;
       color: #ccc;
     }
+
+    footer button {
+      background: #222;
+      border: none;
+      color: #eee;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    footer button:hover {
+      background: #0ff;
+      color: #000;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div>17:33 • LTE</div>
+      <div>17:36 • LTE</div>
       <div>Profilis: Vaidas</div>
     </header>
 
@@ -143,13 +154,12 @@
     </div>
 
     <!-- Dešinė: Žemėlapis + medija -->
-    <div class="map">
-      <h4>Žemėlapis (imitacija)</h4>
-      <p>Maršrutas pažymėtas mėlyna linija</p>
+    <div>
+      <div id="map" class="map"></div>
       <div class="media-player">
         <h4>🎵 Dabar groja:</h4>
-        <p><strong>Mia & Sebastian's Theme</strong></p>
-        <p>Justin Hurwitz – La La Land OST</p>
+        <p id="track">Nežinoma</p>
+        <button onclick="findMusic()">🔍 Atrasti muziką</button>
         <div style="margin-top:0.5rem;">
           <button>⏮️</button>
           <button>⏯️</button>
@@ -166,5 +176,23 @@
       <button>Nustatymai</button>
     </footer>
   </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([54.6872, 25.2797], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([54.6872, 25.2797]).addTo(map).bindPopup("Tavo dabartinė vieta").openPopup();
+
+    function findMusic() {
+      const track = {
+        title: "Mia & Sebastian's Theme",
+        artist: "Justin Hurwitz",
+        album: "La La Land OST"
+      };
+      document.getElementById("track").innerHTML = `<strong>${track.title}</strong><br>${track.artist} – ${track.album}`;
+    }
+  </script>
 </body>
 </html>
