@@ -2,160 +2,93 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8">
-  <title>Tesla UI Prototype</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tesla Interface su Apple Maps</title>
   <style>
-    /* Reset */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #eee;
-      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0d0d0d;
+      color: white;
+    }
+
+    .dashboard {
       display: flex;
       flex-direction: column;
+      height: 100vh;
     }
 
-    header {
+    .top-bar {
+      background-color: #1a1a1a;
+      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
-      padding: 1rem 2rem;
-      background: #111;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-
-    main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 1rem;
-      padding: 1rem 2rem;
-    }
-
-    .card {
-      background: #111;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.6);
-    }
-
-    .speed {
-      font-size: 5rem;
-      font-weight: bold;
-      color: #0ff;
-    }
-
-    .drive-modes button {
-      background: #222;
-      border: none;
-      color: #eee;
-      padding: 0.5rem 1rem;
-      margin: 0.2rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .drive-modes button.active {
-      background: #0ff;
-      color: #000;
-    }
-
-    .battery-bar {
-      background: #333;
-      border-radius: 6px;
-      height: 20px;
-      margin-top: 0.5rem;
-      overflow: hidden;
-    }
-    .battery-fill {
-      background: linear-gradient(90deg, #0ff, #0aa);
-      height: 100%;
-      width: 72%; /* battery level */
-    }
-
-    .climate {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
-    }
-    .climate button {
-      background: #222;
-      border: none;
-      color: #eee;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
     }
 
-    footer {
+    .top-bar h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    .map-container {
+      flex: 1;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Apple_Maps_icon.svg/1024px-Apple_Maps_icon.svg.png');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .map-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background-color: rgba(0,0,0,0.6);
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .controls {
+      background-color: #1a1a1a;
+      padding: 15px;
       display: flex;
       justify-content: space-around;
-      background: #111;
-      padding: 1rem;
     }
-    footer button {
-      background: #222;
+
+    .button {
+      background-color: #333;
       border: none;
-      color: #eee;
-      padding: 0.7rem 1.2rem;
+      color: white;
+      padding: 10px 20px;
       border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    footer button:hover {
-      background: #0ff;
-      color: #000;
+
+    .button:hover {
+      background-color: #555;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div>16:42 • LTE</div>
-    <div>Profilis: Vairuotojas</div>
-  </header>
-
-  <main>
-    <!-- Kairė pusė: greitis + akumuliatorius -->
-    <div class="card">
-      <div class="speed">72</div>
-      <div>km/h</div>
-
-      <div class="drive-modes">
-        <button class="active">P</button>
-        <button>R</button>
-        <button>N</button>
-        <button>D</button>
-      </div>
-
-      <h3 style="margin-top:1rem;">Akumuliatorius</h3>
-      <div class="battery-bar">
-        <div class="battery-fill"></div>
-      </div>
-      <div style="margin-top:0.5rem;">72% • 312 km</div>
+  <div class="dashboard">
+    <div class="top-bar">
+      <h1>Tesla Navigation</h1>
+      <span>🔋 85% | 🌡️ 22°C</span>
     </div>
 
-    <!-- Dešinė pusė: klimato kontrolė -->
-    <div class="card climate">
-      <button onclick="changeTemp(-1)">-</button>
-      <div id="tempDisplay" style="font-size:2rem; color:#0ff;">21°C</div>
-      <button onclick="changeTemp(1)">+</button>
+    <div class="map-container">
+      <div class="map-overlay">
+        Apple Maps stiliaus žemėlapis<br>
+        Vilnius, Lietuva
+      </div>
     </div>
-  </main>
 
-  <footer>
-    <button>Navigacija</button>
-    <button>Energija</button>
-    <button>Įkrovimas</button>
-    <button>Klimatas</button>
-    <button>Medija</button>
-  </footer>
-
-  <script>
-    let temp = 21;
-    function changeTemp(delta) {
-      temp += delta;
-      document.getElementById("tempDisplay").textContent = temp + "°C";
-    }
-  </script>
+    <div class="controls">
+      <button class="button">🔍 Paieška</button>
+      <button class="button">📍 Mano vieta</button>
+      <button class="button">⚙️ Nustatymai</button>
+    </div>
+  </div>
 </body>
 </html>
