@@ -2,49 +2,46 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8">
-  <title>Tesla UI Prototype</title>
+  <title>Tesla UI Prototipas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Reset */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #000;
       color: #eee;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    header {
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      grid-template-rows: auto 1fr auto;
+      gap: 1rem;
+      padding: 1rem;
+      height: 100vh;
+    }
+
+    header, footer {
+      grid-column: 1 / 4;
       display: flex;
       justify-content: space-between;
-      padding: 1rem 2rem;
-      background: #111;
+      padding: 0.5rem 1rem;
+      background-color: #111;
       font-size: 0.9rem;
       color: #aaa;
     }
 
-    main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 1rem;
-      padding: 1rem 2rem;
-    }
-
     .card {
-      background: #111;
+      background-color: #111;
       border-radius: 12px;
-      padding: 1.5rem;
+      padding: 1rem;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
     .speed {
-      font-size: 5rem;
-      font-weight: bold;
+      font-size: 4rem;
       color: #0ff;
+      font-weight: bold;
     }
 
     .drive-modes button {
@@ -56,6 +53,7 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     .drive-modes button.active {
       background: #0ff;
       color: #000;
@@ -68,18 +66,30 @@
       margin-top: 0.5rem;
       overflow: hidden;
     }
+
     .battery-fill {
       background: linear-gradient(90deg, #0ff, #0aa);
       height: 100%;
-      width: 72%; /* battery level */
+      width: 90%; /* 90% battery */
     }
 
-    .climate {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .map {
+      background: #222;
+      height: 100%;
+      border-radius: 12px;
+      position: relative;
+      color: #ccc;
+      padding: 1rem;
     }
-    .climate button {
+
+    .media-player {
+      margin-top: 1rem;
+      background: #111;
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    .media-player button {
       background: #222;
       border: none;
       color: #eee;
@@ -88,74 +98,73 @@
       cursor: pointer;
     }
 
-    footer {
-      display: flex;
-      justify-content: space-around;
-      background: #111;
-      padding: 1rem;
-    }
-    footer button {
-      background: #222;
-      border: none;
-      color: #eee;
-      padding: 0.7rem 1.2rem;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    footer button:hover {
-      background: #0ff;
-      color: #000;
+    .route-info {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div>16:42 • LTE</div>
-    <div>Profilis: Vairuotojas</div>
-  </header>
+  <div class="container">
+    <header>
+      <div>17:33 • LTE</div>
+      <div>Profilis: Vaidas</div>
+    </header>
 
-  <main>
-    <!-- Kairė pusė: greitis + akumuliatorius -->
+    <!-- Kairė: Greitis + režimas + akumuliatorius -->
     <div class="card">
-      <div class="speed">72</div>
-      <div>km/h</div>
-
+      <div class="speed">63</div>
+      <div>MPH</div>
       <div class="drive-modes">
-        <button class="active">P</button>
+        <button>P</button>
         <button>R</button>
         <button>N</button>
-        <button>D</button>
+        <button class="active">D</button>
       </div>
-
-      <h3 style="margin-top:1rem;">Akumuliatorius</h3>
+      <h4 style="margin-top:1rem;">Akumuliatorius</h4>
       <div class="battery-bar">
         <div class="battery-fill"></div>
       </div>
-      <div style="margin-top:0.5rem;">72% • 312 km</div>
+      <div style="margin-top:0.5rem;">90% • 320 km</div>
     </div>
 
-    <!-- Dešinė pusė: klimato kontrolė -->
-    <div class="card climate">
-      <button onclick="changeTemp(-1)">-</button>
-      <div id="tempDisplay" style="font-size:2rem; color:#0ff;">21°C</div>
-      <button onclick="changeTemp(1)">+</button>
+    <!-- Centras: Navigacija -->
+    <div class="card">
+      <h3>Kelionė į tikslą</h3>
+      <div class="route-info">
+        <p>ETA: 10:58 AM</p>
+        <p>Atstumas: 15 mi</p>
+        <p>Trukmė: 37 min</p>
+        <p>Maršrutas: Highway 400 → Mansell Rd</p>
+        <p>Stotelė: Electrify Charger (500 ft)</p>
+      </div>
+      <button style="margin-top:1rem; background:#900; color:#fff; padding:0.5rem 1rem; border:none; border-radius:6px;">Atšaukti kelionę</button>
     </div>
-  </main>
 
-  <footer>
-    <button>Navigacija</button>
-    <button>Energija</button>
-    <button>Įkrovimas</button>
-    <button>Klimatas</button>
-    <button>Medija</button>
-  </footer>
+    <!-- Dešinė: Žemėlapis + medija -->
+    <div class="map">
+      <h4>Žemėlapis (imitacija)</h4>
+      <p>Maršrutas pažymėtas mėlyna linija</p>
+      <div class="media-player">
+        <h4>🎵 Dabar groja:</h4>
+        <p><strong>Mia & Sebastian's Theme</strong></p>
+        <p>Justin Hurwitz – La La Land OST</p>
+        <div style="margin-top:0.5rem;">
+          <button>⏮️</button>
+          <button>⏯️</button>
+          <button>⏭️</button>
+        </div>
+      </div>
+    </div>
 
-  <script>
-    let temp = 21;
-    function changeTemp(delta) {
-      temp += delta;
-      document.getElementById("tempDisplay").textContent = temp + "°C";
-    }
-  </script>
+    <footer>
+      <button>Navigacija</button>
+      <button>Įkrovimas</button>
+      <button>Klimatas</button>
+      <button>Medija</button>
+      <button>Nustatymai</button>
+    </footer>
+  </div>
 </body>
 </html>
